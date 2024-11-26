@@ -1,0 +1,110 @@
+{
+	"info": {
+		"_postman_id": "d4897fd1-6b24-4375-9012-e91892793528",
+		"name": "Post Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "30151921",
+		"_collection_link": "https://lunar-shadow-113529.postman.co/workspace/blog~0f768e49-44a0-47f7-a58f-4f6401091043/collection/30151921-d4897fd1-6b24-4375-9012-e91892793528?action=share&source=collection_link&creator=30151921"
+	},
+	"item": [
+		{
+			"name": "healthcheck",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": "http://127.0.0.1:8080/api/v1/posts/healthcheck"
+			},
+			"response": []
+		},
+		{
+			"name": "Create a new post",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Read and set id as an environment variable\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.environment.set(\"postId\", jsonData.id);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"test\",\n    \"content\": \"my new blog post\",\n    \"author\": \"aziz\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:8080/api/v1/posts"
+			},
+			"response": []
+		},
+		{
+			"name": "Get all posts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:8080/api/v1/posts"
+			},
+			"response": []
+		},
+		{
+			"name": "Get one post",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://127.0.0.1:8080/api/v1/posts/{{postId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Update a post",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"29ad6416-9782-4ab6-9bac-4573fe052ca7\",\n    \"title\": \"test\",\n    \"content\": \"my new blog post\",\n    \"author\": \"aziz abbassi\",\n    \"created_at\": \"2024-11-26T16:00:59.695533+01:00\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://127.0.0.1:8080/api/v1/posts/{{postId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Get one post Copy",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "http://127.0.0.1:8080/api/v1/posts/{{postId}}"
+			},
+			"response": []
+		}
+	]
+}
