@@ -459,7 +459,7 @@ func main() {
 	}
 
 	// Start server
-	port := ":8080"
+	port := getEnvWithDefault("PMA_PORT", "8080")
 	log.Printf("Server starting on port %s", port)
 	if err := r.Run(port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
