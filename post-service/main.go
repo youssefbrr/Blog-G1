@@ -7,13 +7,10 @@ import (
 )
 
 func main() {
-    // Load configuration from .env
     loadDotEnv()
     
-    // Get DSN from environment variables
     dsn := getDSNFromEnv()
 
-    // Create post repository
     repo, err := NewPostRepository(dsn)
     if err != nil {
         log.Fatalf("Failed to create repository: %v", err)
@@ -26,10 +23,8 @@ func main() {
     // Create router
     r := gin.Default()
 
-    // Create post handler
     postHandler := NewPostHandler(repo)
 
-    // Define routes
     v1 := r.Group("/api/v1/posts")
     {
         v1.GET("/healthcheck", Check)
@@ -40,7 +35,6 @@ func main() {
         v1.DELETE("/:id", postHandler.DeletePost)
     }
 
-    // Start server
     port := getEnvWithDefault("PMA_PORT", "8080")
     log.Printf("Server starting on port %s", port)
     if err := r.Run(":" + port); err != nil {

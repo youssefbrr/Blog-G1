@@ -2,7 +2,6 @@ package main
 
 import "time"
 
-// Post represents the post data structure
 type Post struct {
     ID        string     `json:"id"`
     Title     string     `json:"title"`

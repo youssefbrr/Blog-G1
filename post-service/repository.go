@@ -8,31 +8,25 @@ import (
     "github.com/go-sql-driver/mysql"
 )
 
-// PostRepository handles database operations for posts
 type PostRepository struct {
     db *sql.DB
 }
 
-// NewPostRepository creates a new PostRepository
 func NewPostRepository(dataSourceName string) (*PostRepository, error) {
-    // Configure MySQL connection
     _, err := mysql.ParseDSN(dataSourceName)
     if err != nil {
         return nil, fmt.Errorf("invalid MySQL DSN: %v", err)
     }
 
-    // Open database connection
     db, err := sql.Open("mysql", dataSourceName)
     if err != nil {
         return nil, fmt.Errorf("failed to connect to database: %v", err)
     }
 
-    // Test the connection
     if err = db.Ping(); err != nil {
         return nil, fmt.Errorf("failed to ping database: %v", err)
     }
 
-    // Create posts table if not exists
     _, err = db.Exec(`
         CREATE TABLE IF NOT EXISTS posts (
             id VARCHAR(36) PRIMARY KEY,
@@ -51,7 +45,6 @@ func NewPostRepository(dataSourceName string) (*PostRepository, error) {
     return &PostRepository{db: db}, nil
 }
 
-// Create adds a new post to the database
 func (r *PostRepository) Create(post Post) error {
     query := `
         INSERT INTO posts 
@@ -63,7 +56,6 @@ func (r *PostRepository) Create(post Post) error {
     return err
 }
 
-// Get retrieves a post by ID
 func (r *PostRepository) Get(id string) (Post, error) {
     query := `
         SELECT id, title, content, author, created_at, updated_at, deleted_at 
@@ -84,7 +76,6 @@ func (r *PostRepository) Get(id string) (Post, error) {
         return Post{}, err
     }
 
-    // Handle nullable timestamp fields
     if updatedAt.Valid {
         post.UpdatedAt = &updatedAt.Time
     }
@@ -95,7 +86,6 @@ func (r *PostRepository) Get(id string) (Post, error) {
     return post, nil
 }
 
-// Update modifies an existing post
 func (r *PostRepository) Update(id string, post Post) error {
     query := `
         UPDATE posts 
@@ -108,7 +98,6 @@ func (r *PostRepository) Update(id string, post Post) error {
         return err
     }
 
-    // Check if any rows were affected
     rowsAffected, err := result.RowsAffected()
     if err != nil {
         return err
@@ -120,7 +109,7 @@ func (r *PostRepository) Update(id string, post Post) error {
     return nil
 }
 
-// Delete soft deletes a post
+// soft deletes a post
 func (r *PostRepository) Delete(id string) error {
     query := `
         UPDATE posts 
@@ -177,7 +166,6 @@ func (r *PostRepository) List() ([]Post, error) {
         posts = append(posts, post)
     }
 
-    // Check for errors from iterating over rows
     if err = rows.Err(); err != nil {
         return nil, err
     }
