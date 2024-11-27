@@ -28,7 +28,7 @@ func NewPostRepository(dataSourceName string) (*PostRepository, error) {
     }
 
     _, err = db.Exec(`
-        CREATE TABLE IF NOT EXISTS posts (
+        CREATE TABLE IF NOT EXISTS Post (
             id VARCHAR(36) PRIMARY KEY,
             title VARCHAR(255) NOT NULL,
             content TEXT NOT NULL,
@@ -47,7 +47,7 @@ func NewPostRepository(dataSourceName string) (*PostRepository, error) {
 
 func (r *PostRepository) Create(post Post) error {
     query := `
-        INSERT INTO posts 
+        INSERT INTO Post
         (id, title, content, author, created_at) 
         VALUES (?, ?, ?, ?, ?)
     `
@@ -59,7 +59,7 @@ func (r *PostRepository) Create(post Post) error {
 func (r *PostRepository) Get(id string) (Post, error) {
     query := `
         SELECT id, title, content, author, created_at, updated_at, deleted_at 
-        FROM posts 
+        FROM Post
         WHERE id = ? AND deleted_at IS NULL
     `
     var post Post
@@ -88,7 +88,7 @@ func (r *PostRepository) Get(id string) (Post, error) {
 
 func (r *PostRepository) Update(id string, post Post) error {
     query := `
-        UPDATE posts 
+        UPDATE Post
         SET title = ?, content = ?, updated_at = ? 
         WHERE id = ? AND deleted_at IS NULL
     `
@@ -112,7 +112,7 @@ func (r *PostRepository) Update(id string, post Post) error {
 // soft deletes a post
 func (r *PostRepository) Delete(id string) error {
     query := `
-        UPDATE posts 
+        UPDATE Post
         SET deleted_at = ? 
         WHERE id = ? AND deleted_at IS NULL
     `
@@ -138,7 +138,7 @@ func (r *PostRepository) Delete(id string) error {
 func (r *PostRepository) List() ([]Post, error) {
     query := `
         SELECT id, title, content, author, created_at, updated_at 
-        FROM posts 
+        FROM Post
         WHERE deleted_at IS NULL
     `
     rows, err := r.db.Query(query)
