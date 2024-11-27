@@ -6,7 +6,7 @@
 * Run `cp ../.env.example ../.env`
 * Customize `.env`
 * Run `go get .` to install packages
-* Run `go run main.go` to start dev server
+* Run `go run .` to start dev server
 
 ## Build and Start in production server
 
