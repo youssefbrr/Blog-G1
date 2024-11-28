@@ -1,5 +1,5 @@
 const express = require('express');
-const db = require('./db.config');
+const db = require('../config/db.config');
 const router = express.Router();
 
 router.get('/search', (req, res) => {

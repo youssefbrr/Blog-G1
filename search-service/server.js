@@ -1,7 +1,8 @@
 const express = require('express');
-const searchRoutes = require('./searchAPI');
+const searchRoutes = require('./routes/searchAPI');
+const config = require('./utils/config');
 const app = express();
-const PORT = (+process.env.PORT) || 8080;
+const PORT = (+config.port) || 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
