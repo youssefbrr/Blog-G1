@@ -1,0 +1,36 @@
+{
+  "info": {
+    "name": "Search API",
+    "description": "Collection for testing the /search endpoint",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Search Posts",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/search?title={{title}}&content={{content}}&author={{author}}&createdAt={{createdAt}}&limit={{limit}}&offset={{offset}}",
+          "host": ["http://localhost"],
+          "port": "3000",
+          "path": ["search"],
+          "query": [
+            { "key": "title", "value": "", "description": "Filter by post title", "disabled": true },
+            { "key": "content", "value": "", "description": "Filter by post content", "disabled": true },
+            { "key": "author", "value": "", "description": "Filter by author name", "disabled": true },
+            { "key": "createdAt", "value": "", "description": "Filter by creation date (YYYY-MM-DD)", "disabled": true },
+            { "key": "limit", "value": "10", "description": "Number of posts to fetch" },
+            { "key": "offset", "value": "0", "description": "Number of posts to skip" }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
