@@ -23,7 +23,7 @@ func (ph *PostHandler) CreatePost(c *gin.Context) {
         return
     }
 
-    if err := validatePost(newPost); err != nil {
+    if err := validatePostCreateBody(newPost); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
@@ -60,7 +60,7 @@ func (ph *PostHandler) UpdatePost(c *gin.Context) {
         return
     }
 
-    if err := validatePost(updatedData); err != nil {
+    if err := validatePostUpdateBody(updatedData); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
@@ -74,6 +74,48 @@ func (ph *PostHandler) UpdatePost(c *gin.Context) {
     updatedData.ID = existingPost.ID
     updatedData.CreatedAt = existingPost.CreatedAt
     
+    now := time.Now()
+    updatedData.UpdatedAt = &now
+
+    if err := ph.repo.Update(id, updatedData); err != nil {
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, updatedData)
+}
+
+func (ph *PostHandler) PartialUpdatePost(c *gin.Context) {
+    id := c.Param("id")
+
+    var updatedData Post
+    
+    if err := c.ShouldBindJSON(&updatedData); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    if err := validatePostPartialUpdateBody(updatedData); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    existingPost, err := ph.repo.Get(id)
+    if err != nil {
+        c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+        return
+    }
+    
+    updatedData.ID = existingPost.ID
+    if updatedData.Title == "" {
+        updatedData.Title = existingPost.Title
+    }
+    if updatedData.Content == "" {
+        updatedData.Content = existingPost.Content
+    }
+    updatedData.Author = existingPost.Author
+    updatedData.CreatedAt = existingPost.CreatedAt
+
     now := time.Now()
     updatedData.UpdatedAt = &now
 

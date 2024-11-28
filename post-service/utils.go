@@ -4,69 +4,38 @@ import (
     "fmt"
     "log"
     "os"
-    "path/filepath"
 
     "github.com/joho/godotenv"
 )
 
-func validatePost(post Post) error {
-    if post.Title == "" {
-        return fmt.Errorf("title is required")
-    }
-    if post.Content == "" {
-        return fmt.Errorf("content is required")
-    }
-    if post.Author == "" {
-        return fmt.Errorf("author is required")
-    }
-    if len(post.Title) > 255 {
-        return fmt.Errorf("title cannot exceed 255 characters")
-    }
-    if len(post.Author) > 50 {
-        return fmt.Errorf("author cannot exceed 50 characters")
-    }
-    return nil
-}
-
-// loadDotEnv attempts to load .env file from current, parent, or grandparent directories
 func loadDotEnv() error {
-    searchDirs := []string{
-        ".",
-        "..",
-        "../..",
-    }
-
     envFiles := []string{
-        ".env",
-        "app.env",
-        "config.env",
+        ".env.local",
+        ".env.dev.local",
+        ".env.stating.local",
+        ".env.prod.local",
+        ".env.test.local",
     }
 
     var loadedFile string
 
-    for _, dir := range searchDirs {
-        for _, filename := range envFiles {
-            filepath := filepath.Join(dir, filename)
-            
-            if _, err := os.Stat(filepath); err == nil {
-                if err := godotenv.Load(filepath); err != nil {
-                    return fmt.Errorf("error loading env file %s: %v", filepath, err)
-                }
-                
-                loadedFile = filepath
-                break
+    for _, filename := range envFiles {
+        
+        if _, err := os.Stat(filename); err == nil {
+            if err := godotenv.Load(filename); err != nil {
+                return fmt.Errorf("error loading env file %s: %v", filename, err)
             }
-        }
-
-        if loadedFile != "" {
+            
+            loadedFile = filename
             break
         }
     }
 
+
     if loadedFile != "" {
         log.Printf("Loaded environment configuration from: %s", loadedFile)
     } else {
-        log.Println("No .env file found. Using environment variables or defaults.")
+        log.Println("No environment variables file found. Using environment variables or defaults.")
     }
 
     return nil

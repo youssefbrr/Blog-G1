@@ -24,9 +24,9 @@ func main() {
     // Create router
     r := gin.Default()
 
-r.Use(cors.New(cors.Config{
+    r.Use(cors.New(cors.Config{
         AllowOrigins:     []string{"*"},
-        AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
+        AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
         AllowHeaders:     []string{"Origin", "Content-Type"},
         ExposeHeaders:    []string{"Content-Length"},
         AllowCredentials: true,
@@ -41,6 +41,7 @@ r.Use(cors.New(cors.Config{
         v1.GET("", postHandler.ListPosts)
         v1.GET("/:id", postHandler.GetPost)
         v1.PUT("/:id", postHandler.UpdatePost)
+        v1.PATCH("/:id", postHandler.PartialUpdatePost)
         v1.DELETE("/:id", postHandler.DeletePost)
     }
 

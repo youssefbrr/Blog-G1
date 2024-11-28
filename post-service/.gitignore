@@ -1,2 +1,6 @@
 post
-.env
+.env.local
+.env.dev.local
+.env.staging.local
+.env.prod.local
+.env.test.local
