@@ -1,12 +1,13 @@
-import Head from 'next/head'
+'use client'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
-  return (
-    <div className="">
-      <Head>
-        <title>Home</title>
-      </Head>
-      <h1>Home</h1>
-    </div>
-  )
+  const router = useRouter()
+
+  useEffect(() => {
+    router.push('/posts')
+  }, [router])
+
+  return null
 }

@@ -2,65 +2,48 @@
 import React from 'react'
 import { useParams } from 'next/navigation'
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react'
 import { Post } from '../post.types'
 import PostCard from '@/app/posts/_components/PostCard/PostCard'
+import { getSearchPostsApi } from '@/lib/api'
 
-interface SearchProps {
-  params: {
-    postId: string
-  }
-}
+interface SearchProps {}
 
-const Search =  ({ params }: SearchProps) => {
-  const { searchId } = useParams()
-  console.log(searchId,'searchId')
+const Search = ({}: SearchProps) => {
+  const { searchString } = useParams()
   const [articles, setArticles] = useState<Post[]>([])
-
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
   const fetchArticles = useCallback(async () => {
-    let data
-    const url = `https://blog1-search-posts.tamtasks.com/search?title=${searchId}&content=${searchId}&author=${searchId}&page=${page}`
-    setLoading(true)
-    setError(null)
-
     try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          Accept: '*',
-          'Content-Type': 'application/json',
-        },
+      setLoading(true)
+      setError(null)
+      getSearchPostsApi({
+        title: searchString,
+        content: searchString,
+        author: searchString,
+        page,
+      }).then((data) => {
+        setArticles(data)
+        setHasMore(data.length > 0)
+        setPage((prevPage) => prevPage + 1)
       })
-
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`)
-      }
-
-      data = await response.json()
-      console.log(data)
-
-      setArticles(data)
-      setHasMore(true)
-      setPage((prevPage) => prevPage + 1)
     } catch (error: any) {
-      console.error(error.message)
       setError(error instanceof Error ? error.message : 'An unknown error occurred')
       setHasMore(false)
     } finally {
       setLoading(false)
     }
-  }, [page, searchId])
+  }, [page, searchString])
 
   // Initial fetch
   useEffect(() => {
     fetchArticles()
   }, [])
 
-  console.log(articles)
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
       {error && (
@@ -90,7 +73,7 @@ const Search =  ({ params }: SearchProps) => {
       )}
 
       {!hasMore && articles.length === 0 && (
-        <p className="text-center mt-6 text-gray-500">No articles found</p>
+        <p className="text-center mt-6 text-gray-500">No Posts found</p>
       )}
     </div>
   )

@@ -32,7 +32,7 @@ export function Layout({ children }: { children: ReactNode }) {
             />
           </div>
           <div>
-            <button className="bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+            <button className="bg-white hover:bg-gray-100  font-semibold py-2 px-4 border text-indigo-500 border-indigo-500 rounded-lg shadow">
               Create Post
             </button>
           </div>
