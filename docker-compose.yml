@@ -44,5 +44,16 @@ services:
     depends_on:
       - db
 
+  search-service:
+    build:
+      context: ./search-service
+    container_name: blog-search-service
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "3636:3000"
+    depends_on:
+      - db
+
 volumes:
   db_data:
