@@ -9,22 +9,22 @@ router.get('/search', (req, res) => {
     const params = [];
 
     if (title) {
-        query += ' AND title LIKE ?';
+        query += ' OR title LIKE ?';
         params.push(`%${title}%`);
     }
 
     if (content) {
-        query += ' AND content LIKE ?';
+        query += ' OR content LIKE ?';
         params.push(`%${content}%`);
     }
 
     if (author) {
-        query += ' AND author LIKE ?';
+        query += ' OR author LIKE ?';
         params.push(`%${author}%`);
     }
 
     if (createdAt) {
-        query += ' AND DATE(created_at) = ?';
+        query += ' OR DATE(created_at) = ?';
         params.push(createdAt);
     }
     const limit = req.query.limit ? parseInt(req.query.limit) : 10;
