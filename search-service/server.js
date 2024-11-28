@@ -1,6 +1,7 @@
 const express = require('express');
 const searchRoutes = require('./routes/searchAPI');
 const config = require('./utils/config');
+
 const app = express();
 const PORT = (+config.port) || 8080;
 
