@@ -1,7 +1,9 @@
+version: '3.8'
+
 services:
   db:
     image: mysql:8.0
-    container_name: mysql-db
+    container_name: blog1-mysql-db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -23,6 +25,22 @@ services:
       PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - "${PMA_PORT}:80"
+    depends_on:
+      - db
+
+  post-service:
+    build:
+      context: ./post-service # Adjust for Dockerfile location
+    container_name: post-service
+    restart: always
+    ports:
+      - "5353:8080" # Map the Go app's port
+    environment:
+      # Pass environment variables or reference .env
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     depends_on:
       - db
 
