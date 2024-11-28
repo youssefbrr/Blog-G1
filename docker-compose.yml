@@ -55,5 +55,17 @@ services:
     depends_on:
       - db
 
+  front-end:
+    build:
+      context: ./frontend-service
+    container_name: blog1-front-end
+    environment:
+      - NODE_ENV=production
+    ports:
+      - "3232:3000"
+    depends_on:
+      - post-service
+      - search-service
+
 volumes:
   db_data:
