@@ -1,11 +1,11 @@
 package main
 
 import (
-    "net/http"
-    "time"
+	"net/http"
+	"time"
 
-    "github.com/gin-gonic/gin"
-    "github.com/google/uuid"
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 type PostHandler struct {
@@ -106,5 +106,8 @@ func (ph *PostHandler) ListPosts(c *gin.Context) {
 }
 
 func Check(c *gin.Context) {
-    c.JSON(http.StatusOK, "{'status': 200, 'message': 'service is running!'}")
+    c.JSON(http.StatusOK, gin.H{
+        "status": 200,
+        "message": "service is running!",
+    })
 }
